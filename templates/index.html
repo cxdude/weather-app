@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
     <style>
-      /* General Styling */
+      /* Styling similar to the previous version */
       body {
         font-family: "Arial", sans-serif;
         margin: 0;
@@ -64,6 +64,29 @@
         margin-top: 10px;
       }
 
+      /* Suggestions Box */
+      .suggestions {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: #fff;
+        max-height: 200px;
+        overflow-y: auto;
+        width: 80%;
+        max-width: 400px;
+        margin-top: 5px;
+        position: absolute;
+        z-index: 10;
+      }
+
+      .suggestions div {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .suggestions div:hover {
+        background-color: #ddd;
+      }
+
       /* Responsive Design */
       @media (max-width: 768px) {
         h1 {
@@ -89,12 +112,64 @@
     <div class="container">
       <h1>Get Your City Weather</h1>
       <form method="POST" action="/weather">
-        <input type="text" name="city" placeholder="Enter city name" required />
+        <input
+          type="text"
+          name="city"
+          id="cityInput"
+          placeholder="Enter city name"
+          required
+          onkeyup="getSuggestions(this.value)"
+        />
+        <div id="suggestionsBox" class="suggestions"></div>
         <button type="submit">Get Weather</button>
       </form>
       {% if error %}
       <p class="error">{{ error }}</p>
       {% endif %}
     </div>
+
+    <script>
+      // Function to fetch suggestions from OpenWeatherMap API
+      function getSuggestions(query) {
+        if (query.length < 2) {
+          document.getElementById("suggestionsBox").innerHTML = "";
+          return;
+        }
+
+        // OpenWeatherMap API request to fetch city suggestions
+        let url = `https://api.openweathermap.org/data/2.5/find?q=${query}&type=like&appid=3d923ca7c35f04b9fe5c7a59c44ad27f`;
+
+        // Start a fetch request
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            const suggestionsBox = document.getElementById("suggestionsBox");
+            suggestionsBox.innerHTML = ""; // Clear previous suggestions
+
+            // Log the response data for debugging
+            console.log(data);
+
+            if (data.list && data.list.length > 0) {
+              data.list.forEach((item) => {
+                let div = document.createElement("div");
+                div.textContent = item.name + ", " + item.sys.country; // City and country
+                div.onclick = function () {
+                  document.getElementById("cityInput").value =
+                    item.name + ", " + item.sys.country; // Set input value
+                  suggestionsBox.innerHTML = ""; // Clear suggestions
+                };
+                suggestionsBox.appendChild(div);
+              });
+            } else {
+              suggestionsBox.innerHTML = "No suggestions found.";
+            }
+          })
+          .catch((err) => {
+            console.error("Error fetching suggestions:", err);
+            document.getElementById("suggestionsBox").innerHTML =
+              "Error fetching data.";
+          });
+      }
+    </script>
   </body>
 </html>
