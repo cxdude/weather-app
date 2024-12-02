@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Result</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f0f8ff;
+        color: #333;
+      }
+
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        font-size: 2em;
+      }
+
+      .weather-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+      }
+
+      .weather-info {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 600px;
+        width: 100%;
+      }
+
+      .weather-info p {
+        font-size: 1.2em;
+        margin: 10px 0;
+      }
+
+      .weather-info img {
+        width: 80px;
+        height: 80px;
+        margin-top: 20px;
+      }
+
+      a {
+        text-decoration: none;
+        font-size: 1.2em;
+        color: #4caf50;
+        margin-top: 20px;
+      }
+
+      a:hover {
+        color: #45a049;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2em;
+        }
+
+        .weather-info {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>Weather App</header>
+    <div class="weather-container">
+      <h1>Weather in {{ weather.city }}</h1>
+      <div class="weather-info">
+        <p><strong>Temperature:</strong> {{ weather.temperature }}°C</p>
+        <p><strong>Condition:</strong> {{ weather.description }}</p>
+        <img
+          src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png"
+          alt="Weather Icon"
+        />
+      </div>
+      <a href="/">Search again</a>
+    </div>
+  </body>
+</html>

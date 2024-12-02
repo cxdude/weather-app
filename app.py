@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-API_KEY = "cdc262fa3b11d3d4f87bfbd12105fb0f" 
+API_KEY = "3d923ca7c35f04b9fe5c7a59c44ad27f" 
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
 @app.route("/")
@@ -20,6 +20,9 @@ def weather():
         if response.get("cod") != 200:
             error_message = response.get("message", "Something went wrong.")
             return render_template("index.html", error=error_message)
+
+        if "main" not in response or "weather" not in response or not response["weather"]:
+            return render_template("index.html", error="Invalid response from API.")
 
         weather_data = {
             "city": response["name"],
